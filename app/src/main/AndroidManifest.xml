@@ -23,6 +23,7 @@
         </activity>
         <activity android:name=".customer_information"></activity>
         <activity android:name="home"></activity>
+        <activity android:name="login"></activity>
     </application>
 
 </manifest>
