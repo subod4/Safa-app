@@ -13,6 +13,7 @@ import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.Spinner;
 import android.widget.RadioGroup;
+import android.widget.Toast;
 
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -65,7 +66,12 @@ public class customer_information extends AppCompatActivity {
                 userMap.put("name", name);
                 userMap.put("email", email_add);
                 userMap.put("gender",selectgender);
-                root.push().setValue(userMap);
+                root.push().setValue(userMap).addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        Toast.makeText(customer_information.this,"Data Saved",Toast.LENGTH_SHORT).show();
+                    }
+                });
                 Intent intent=new Intent(customer_information.this, home.class);
                 startActivity(intent);
             }
