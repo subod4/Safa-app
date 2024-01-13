@@ -2,6 +2,7 @@ package com.example.safa;
 
 import android.os.Bundle;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -11,6 +12,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.messaging.FirebaseMessaging;
 
 public class home extends AppCompatActivity {
     @Override
@@ -39,9 +41,28 @@ public class home extends AppCompatActivity {
                                     DataSnapshot dataSnapshot = task.getResult();
                                     String name = dataSnapshot.child("name").getValue(String.class);
                                     String email = dataSnapshot.child("email").getValue(String.class);
+                                    String flag=dataSnapshot.child("flag").getValue(String.class);
 
                                     displayNameTextView.setText("Name: " + name);
                                     displayEmailTextView.setText("Email: " + email);
+                                    if("false".equals(flag)){
+                                        Toast.makeText(home.this,"false",Toast.LENGTH_SHORT).show();
+                                        FirebaseMessaging.getInstance().subscribeToTopic("News")
+                                                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                    @Override
+                                                    public void onComplete(@NonNull Task<Void> task) {
+                                                        String msg = "Done";
+                                                        if (!task.isSuccessful()) {
+                                                            msg = "Failed";
+                                                        }
+
+                                                    }
+                                                });
+
+                                    }
+                                    else{
+                                        Toast.makeText(home.this,"True",Toast.LENGTH_SHORT).show();
+                                    }
                                 }
                             }
                         });
