@@ -35,13 +35,7 @@
         app:layout_constraintTop_toBottomOf="@+id/safa"
         app:layout_constraintVertical_bias="0.264" />
 
-    <LinearLayout
-        android:id="@+id/socialicons"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:gravity="center"
-        />
+
 
 
     <ImageView
