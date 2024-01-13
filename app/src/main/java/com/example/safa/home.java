@@ -4,6 +4,13 @@ import android.os.Bundle;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import android.app.Notification;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.content.Context;
+import android.os.Build;
+//import android.support.v4.app.NotificationCompat;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -45,6 +52,8 @@ public class home extends AppCompatActivity {
 
                                     displayNameTextView.setText("Name: " + name);
                                     displayEmailTextView.setText("Email: " + email);
+
+                                    /*
                                     if("false".equals(flag)){
                                         Toast.makeText(home.this,"false",Toast.LENGTH_SHORT).show();
                                         FirebaseMessaging.getInstance().subscribeToTopic("News")
@@ -63,6 +72,7 @@ public class home extends AppCompatActivity {
                                     else{
                                         Toast.makeText(home.this,"True",Toast.LENGTH_SHORT).show();
                                     }
+                                    */
                                 }
                             }
                         });
@@ -70,5 +80,34 @@ public class home extends AppCompatActivity {
                 }
             }
         });
+        public class NotificationHelper {
+
+            private static final String CHANNEL_ID = "message_notification";
+            private static final String CHANNEL_NAME = "Message Notification";
+
+            public static void showNotification(Context context, String title, String message) {
+                NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+
+                // Create a Notification Channel for Android Oreo and above
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                    NotificationChannel channel = new NotificationChannel(CHANNEL_ID, CHANNEL_NAME, NotificationManager.IMPORTANCE_DEFAULT);
+                    notificationManager.createNotificationChannel(channel);
+                }
+
+                NotificationCompat.Builder builder = new NotificationCompat.Builder(context, CHANNEL_ID)
+                        .setSmallIcon(R.drawable.ic_notification_icon)
+                        .setContentTitle(title)
+                        .setContentText(message)
+                        .setPriority(NotificationCompat.PRIORITY_DEFAULT);
+
+                Notification notification = builder.build();
+
+                // Use a unique notification ID to update or cancel the notification
+                int notificationId = 1;
+
+                // Show the notification
+                notificationManager.notify(notificationId, notification);
+            }
+        }
     }
 }
