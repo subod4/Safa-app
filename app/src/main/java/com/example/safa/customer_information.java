@@ -120,7 +120,7 @@ public class customer_information extends AppCompatActivity {
                 userMap.put("gender", selectgender);
                 userMap.put("latitude", String.valueOf(latitude));
                 userMap.put("longitude", String.valueOf(longitude));
-                userMap.put("flag","false");
+//                userMap.put("flag","false");
 
                 // Save data to Firebase
                 root.push().setValue(userMap).addOnCompleteListener(new OnCompleteListener<Void>() {

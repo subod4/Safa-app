@@ -70,13 +70,13 @@ public class home extends AppCompatActivity {
                                     displayEmailTextView.setText("Email: " + email);
 
 
-                                    if ("false".equals(flag)) {
-                                        Toast.makeText(home.this, "false", Toast.LENGTH_SHORT).show();
+                                    if ("True".equals(flag)) {
+                                        Toast.makeText(home.this, "True", Toast.LENGTH_SHORT).show();
                                         scheduleNotification();
 
 
                                     } else {
-                                        Toast.makeText(home.this, "True", Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(home.this, "false", Toast.LENGTH_SHORT).show();
                                     }
 
                                 }
