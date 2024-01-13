@@ -20,6 +20,22 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.messaging.FirebaseMessaging;
+import android.app.AlarmManager;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.content.Context;
+import android.content.Intent;
+import android.os.Build;
+import android.os.SystemClock;
+import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
+
 
 public class home extends AppCompatActivity {
     @Override
@@ -48,31 +64,21 @@ public class home extends AppCompatActivity {
                                     DataSnapshot dataSnapshot = task.getResult();
                                     String name = dataSnapshot.child("name").getValue(String.class);
                                     String email = dataSnapshot.child("email").getValue(String.class);
-                                    String flag=dataSnapshot.child("flag").getValue(String.class);
+                                    String flag = dataSnapshot.child("flag").getValue(String.class);
 
                                     displayNameTextView.setText("Name: " + name);
                                     displayEmailTextView.setText("Email: " + email);
 
-                                    /*
-                                    if("false".equals(flag)){
-                                        Toast.makeText(home.this,"false",Toast.LENGTH_SHORT).show();
-                                        FirebaseMessaging.getInstance().subscribeToTopic("News")
-                                                .addOnCompleteListener(new OnCompleteListener<Void>() {
-                                                    @Override
-                                                    public void onComplete(@NonNull Task<Void> task) {
-                                                        String msg = "Done";
-                                                        if (!task.isSuccessful()) {
-                                                            msg = "Failed";
-                                                        }
 
-                                                    }
-                                                });
+                                    if ("false".equals(flag)) {
+                                        Toast.makeText(home.this, "false", Toast.LENGTH_SHORT).show();
+                                        scheduleNotification();
 
+
+                                    } else {
+                                        Toast.makeText(home.this, "True", Toast.LENGTH_SHORT).show();
                                     }
-                                    else{
-                                        Toast.makeText(home.this,"True",Toast.LENGTH_SHORT).show();
-                                    }
-                                    */
+
                                 }
                             }
                         });
@@ -80,34 +86,28 @@ public class home extends AppCompatActivity {
                 }
             }
         });
-        public class NotificationHelper {
-
-            private static final String CHANNEL_ID = "message_notification";
-            private static final String CHANNEL_NAME = "Message Notification";
-
-            public static void showNotification(Context context, String title, String message) {
-                NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-
-                // Create a Notification Channel for Android Oreo and above
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                    NotificationChannel channel = new NotificationChannel(CHANNEL_ID, CHANNEL_NAME, NotificationManager.IMPORTANCE_DEFAULT);
-                    notificationManager.createNotificationChannel(channel);
-                }
-
-                NotificationCompat.Builder builder = new NotificationCompat.Builder(context, CHANNEL_ID)
-                        .setSmallIcon(R.drawable.ic_notification_icon)
-                        .setContentTitle(title)
-                        .setContentText(message)
-                        .setPriority(NotificationCompat.PRIORITY_DEFAULT);
-
-                Notification notification = builder.build();
-
-                // Use a unique notification ID to update or cancel the notification
-                int notificationId = 1;
-
-                // Show the notification
-                notificationManager.notify(notificationId, notification);
-            }
-        }
     }
-}
+
+        private void scheduleNotification() {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                CharSequence name = "channel_name";
+                String description = "channel_description";
+                int importance = NotificationManager.IMPORTANCE_DEFAULT;
+                NotificationChannel channel = new NotificationChannel("channel_id", name, importance);
+                channel.setDescription(description);
+
+                NotificationManager notificationManager = getSystemService(NotificationManager.class);
+                notificationManager.createNotificationChannel(channel);
+            }
+
+            Intent notificationIntent = new Intent(this, NotificationPublisher.class);
+            PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0, notificationIntent, PendingIntent.FLAG_IMMUTABLE);
+
+            long futureInMillis = SystemClock.elapsedRealtime() + 10000; // 10 seconds
+            AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+            alarmManager.set(AlarmManager.ELAPSED_REALTIME_WAKEUP, futureInMillis, pendingIntent);
+        }
+
+    }
+
+
