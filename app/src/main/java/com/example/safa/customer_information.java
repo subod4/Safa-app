@@ -94,12 +94,34 @@ public class customer_information extends AppCompatActivity {
                                 } else {
                                     // If sign in fails, display a message to the user.
 
+                // Update the userMap with String values
+                HashMap<String, String> userMap = new HashMap<>();
+                userMap.put("name", name);
+                userMap.put("email", email_add);
+                userMap.put("gender", selectgender);
+                userMap.put("latitude", String.valueOf(latitude));
+                userMap.put("longitude", String.valueOf(longitude));
+                userMap.put("flag","false");
+
+                // Save data to Firebase
+                root.push().setValue(userMap).addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        Toast.makeText(customer_information.this, "Data Saved", Toast.LENGTH_SHORT).show();
+                    }
+                });
+
+                // Navigate to the home activity
+                Intent intent = new Intent(customer_information.this, home.class);
+                startActivity(intent);
+
                                     Toast.makeText(customer_information.this, "Authentication failed.",
                                             Toast.LENGTH_SHORT).show();
 
                                 }
                             }
                         });
+
             }
         });
     }
